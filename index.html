@@ -1,0 +1,1579 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thailand Task Tracker</title>
+    <link rel="icon" href="https://beavertonrotary.org/wp-content/uploads/2021/07/cropped-3ae53-cropped-rotary-simple-logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        h2, h3, h4 {
+            color: #0066cc;
+            font-weight: 500;
+        }
+        h1 {
+            color: #f7a81b;
+            font-weight: 500;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #0066cc;
+            color: white;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+        tr:hover {
+            background-color: #f5f9ff;
+        }
+        select {
+            padding: 8px 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            width: 100%;
+            font-family: inherit;
+        }
+        .urgent {
+            background-color: #ffe6e6;
+        }
+        .medium {
+            background-color: #fff0e0;
+        }
+        .future {
+            background-color: #e6f7ff;
+        }
+        .completed {
+            background-color: #e6ffe6;
+        }
+        .progress {
+            background-color: #fffbe6;
+        }
+        .tabs {
+            overflow: hidden;
+            background-color: #fff;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .tabs button {
+            background-color: inherit;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 24px;
+            transition: 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            flex-grow: 1;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+        }
+        .tabs button:hover {
+            background-color: #f0f7ff;
+            color: #0066cc;
+        }
+        .tabs button.active {
+            background-color: #fff;
+            color: #0066cc;
+            border-bottom: 3px solid #0066cc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            animation: fadeEffect 0.5s;
+        }
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        .card {
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid #0066cc;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            color: #0066cc;
+        }
+        .card h3 i {
+            margin-right: 10px;
+            color: #0066cc;
+        }
+        .card ul {
+            padding-left: 20px;
+        }
+        .card li {
+            margin-bottom: 8px;
+        }
+        .card strong {
+            color: #333;
+        }
+        .overview-header {
+            background: linear-gradient(to right, #0066cc, #4c9aff);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .overview-header h2 {
+            color: white;
+            margin-top: 0;
+            font-size: 1.8em;
+        }
+        .overview-header p {
+            margin-bottom: 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .info-box h4 {
+            margin-top: 0;
+            color: #0066cc;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+        }
+        .info-box h4 i {
+            margin-right: 8px;
+        }
+        .info-box p {
+            margin-bottom: 0;
+        }
+        .image-card {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .image-card img {
+            width: 100%;
+            height: 250px;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+        .image-card .caption {
+            padding: 15px;
+            background-color: #fff;
+        }
+        .image-card .caption h4 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .image-card .caption p {
+            margin-bottom: 0;
+            color: #666;
+        }
+        .host-family-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .host-family-card .header {
+            background-color: #0066cc;
+            color: white;
+            padding: 15px;
+        }
+        .host-family-card .header h4 {
+            margin: 0;
+            color: white;
+        }
+        .host-family-card .content {
+            padding: 15px;
+        }
+        .host-family-card .content p {
+            margin: 5px 0;
+        }
+        .host-family-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .map-container {
+            height: 400px;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: #e6f7ff;
+            border-left: 5px solid #0066cc;
+        }
+        .alert i {
+            margin-right: 10px;
+            color: #0066cc;
+        }
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .rule-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        .rule-card .header {
+            background-color: #0066cc;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .rule-card .header i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .rule-card .header h4 {
+            margin: 0;
+            color: white;
+        }
+        .rule-card .content {
+            padding: 15px;
+            flex-grow: 1;
+        }
+        .rule-card .content ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .lang-phrase {
+            background-color: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .lang-phrase .thai {
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 1200px) {
+            .contacts-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .contacts-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .contact-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .contact-card .header {
+            background-color: #0066cc;
+            color: white;
+            padding: 15px;
+        }
+        .contact-card .header h4 {
+            margin: 0;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        .contact-card .header h4 i {
+            margin-right: 10px;
+        }
+        .contact-card .content {
+            padding: 15px;
+        }
+        .contact-card .content p {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .contact-card .content p i {
+            margin-right: 10px;
+            color: #0066cc;
+            width: 20px;
+            text-align: center;
+        }
+        .welcome-banner {
+            background: linear-gradient(135deg, #0066cc 0%, #0066cc 35%, #4c9aff 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .welcome-banner h1 {
+            color: white;
+            margin-top: 0;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+        .welcome-banner p {
+            font-size: 1.2em;
+            margin-bottom: 0;
+            opacity: 0.9;
+        }
+        .resource-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            margin-bottom: 20px;
+        }
+        .resource-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .resource-card .header {
+            padding: 15px;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+        }
+        .resource-card .header img {
+            height: 40px;
+            margin-right: 15px;
+        }
+        .resource-card .header h4 {
+            margin: 0;
+            color: #0066cc;
+        }
+        .resource-card .content {
+            padding: 15px;
+        }
+        .resource-card .content p {
+            margin-top: 0;
+        }
+        .resource-card .footer {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+        .resource-card .footer a {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        .resource-card .footer a i {
+            margin-left: 5px;
+        }
+        .resource-card .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 992px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            .tabs button {
+                width: 100%;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body data-new-gr-c-s-check-loaded="14.1233.0" data-gr-ext-installed="">
+    <div class="container">
+        <h1>Declan's Thailand Exchange 2025-2026</h1>
+        
+        <div class="tabs">
+            <button class="tablinks active" onclick="openTab(event, 'TaskTracker')">Task Tracker</button>
+            <button class="tablinks" onclick="openTab(event, 'Overview')">Program Overview</button>
+            <button class="tablinks" onclick="openTab(event, 'Contacts')">Important Contacts</button>
+            <button class="tablinks" onclick="openTab(event, 'Rules')">Rules &amp; Guidelines</button>
+            <button class="tablinks" onclick="openTab(event, 'ThaiLanguage')">Thai Language</button>
+        </div>
+        
+        <div id="TaskTracker" class="tabcontent" style="display: block;">
+            <h2>Task Tracker</h2>
+            <p>Track your progress through the exchange preparation process. Update the status of each task as you complete them.</p>
+            
+            <h3>Immediate Tasks (April 26-30, 2025)</h3>
+            <table id="urgentTasks">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Deadline</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="task1">
+                        <td>Confirm receipt of Thailand documents</td>
+                        <td>April 27, 2025</td>
+                        <td>Reply to Prapa Wongdeeprasith's email confirming you received the PDF packet with guarantee form and other documents</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task1', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task2">
+                        <td>Forward Thailand documents to Kathi</td>
+                        <td>April 27, 2025</td>
+                        <td>Forward the complete Thailand document packet to Katharine Perkins (kathihp1@gmail.com) as requested in her email</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task2', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task3">
+                        <td>Complete personal information form</td>
+                        <td>April 28, 2025</td>
+                        <td>Fill out and send the requested personal information to Prapa (First Name, Middle Name, Last Name, etc.) as requested in her email</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task3', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task4">
+                        <td>Read Rules &amp; Regulations document</td>
+                        <td>April 30, 2025</td>
+                        <td>Carefully read and understand the "Rules and Regulations for Youth Exchange students, District 3350" document</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task4', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task5">
+                        <td>Begin researching insurance options</td>
+                        <td>April 30, 2025</td>
+                        <td>Research whether to get insurance from home country OR apply with CISI Bolduc for Plan B (USD 839)</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task5', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>May 2025 Tasks</h3>
+            <table id="mayTasks">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Deadline</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="task6">
+                        <td>Sign Rules &amp; Regulations Form</td>
+                        <td>May 5, 2025</td>
+                        <td>Get your signature on the Rules &amp; Regulations Form</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task6', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task7">
+                        <td>Get parent signatures on Rules &amp; Regulations Form</td>
+                        <td>May 5, 2025</td>
+                        <td>Have both parents sign the Rules &amp; Regulations Form</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task7', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task8">
+                        <td>Get club YEO signature on Rules &amp; Regulations Form</td>
+                        <td>May 10, 2025</td>
+                        <td>Have the Bath Sunrise Rotary Club president or YEO sign as witness on the Rules &amp; Regulations Form</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task8', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task10">
+                        <td>Research Thai consulate/embassy location</td>
+                        <td>May 15, 2025</td>
+                        <td>Find the nearest Thai consulate/embassy and research their visa application requirements</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task10', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task11">
+                        <td>Choose insurance plan</td>
+                        <td>May 15, 2025</td>
+                        <td>Decide between home country insurance or CISI Bolduc Plan B</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task11', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task12">
+                        <td>Mail completed Rules &amp; Regulations Form</td>
+                        <td>May 20, 2025</td>
+                        <td>Send the completed form via registered mail/courier to Thailand (address on form)</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task12', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task13">
+                        <td>Prepare visa application documents</td>
+                        <td>May 25, 2025</td>
+                        <td>Gather all required documents for Thailand Education "ED" visa application</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task13', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task14">
+                        <td>Schedule visa application appointment</td>
+                        <td>May 30, 2025</td>
+                        <td>Contact Thai consulate/embassy to schedule visa application appointment</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task14', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>June 2025 Tasks</h3>
+            <table id="juneTasks">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Deadline</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="task15">
+                        <td>Apply for chosen insurance plan</td>
+                        <td>June 1, 2025</td>
+                        <td>Complete application for selected insurance (home country or CISI Bolduc Plan B)</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task15', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task16">
+                        <td>Attend visa appointment</td>
+                        <td>June 10, 2025</td>
+                        <td>Attend Thai consulate/embassy appointment and submit visa application</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task16', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task17">
+                        <td>Contact Kathi about travel agency</td>
+                        <td>June 15, 2025</td>
+                        <td>If not received by now, check with Kathi Perkins about the approved travel agency information</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task17', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task18">
+                        <td>Send insurance policy copy to Thailand</td>
+                        <td>June 15, 2025</td>
+                        <td>Send copy of insurance policy to District 3350 (rotaryye3350@yahoo.co.th)</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task18', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task20">
+                        <td>Book flights through approved agency</td>
+                        <td>June 30, 2025</td>
+                        <td>Book round-trip tickets to arrive Aug 20-25, 2025 through Rotary's approved agency</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task20', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task21">
+                        <td>Confirm visa approval</td>
+                        <td>June 30, 2025</td>
+                        <td>Follow up on visa application status and confirm approval</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task21', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>July 2025 Tasks</h3>
+            <table id="julyTasks">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Deadline</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="task22">
+                        <td>Allocate $500 USD emergency fund</td>
+                        <td>July 10, 2025</td>
+                        <td>Set aside $500 USD for the required emergency fund</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task22', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task23">
+                        <td>Complete Thailand Trip Application</td>
+                        <td>July 15, 2025</td>
+                        <td>If interested in optional bus trips, complete application form</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task23', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task24">
+                        <td>Complete Consent Form</td>
+                        <td>July 15, 2025</td>
+                        <td>Complete consent form for photo/video release (with parent signatures)</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task24', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task25">
+                        <td>Contact first host family</td>
+                        <td>July 20, 2025</td>
+                        <td>Email Mrs. Ladapa Attarungroj (Ladapa.att18@gmail.com) to introduce yourself</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task25', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task26">
+                        <td>Complete Student Travel Information Form</td>
+                        <td>July 20, 2025</td>
+                        <td>Fill out the Student Travel Information Form with complete flight itinerary</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task26', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task27">
+                        <td>Submit Travel Information Form</td>
+                        <td>July 21, 2025</td>
+                        <td>Email completed Travel Information Form to rotaryye3350@yahoo.co.th</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task27', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>August 2025 Tasks (Pre-Departure)</h3>
+            <table id="augustPreTasks">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Deadline</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="task28">
+                        <td>Prepare 2"x2" photos for Thailand</td>
+                        <td>August 1, 2025</td>
+                        <td>Get at least 4 passport-sized photos (2"x2") as requested in the documents</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task28', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task29">
+                        <td>Make copies of important documents</td>
+                        <td>August 10, 2025</td>
+                        <td>Make copies of passport, visa, insurance, plane tickets, and host family info</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task29', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task30">
+                        <td>Prepare cultural items for Thailand</td>
+                        <td>August 15, 2025</td>
+                        <td>Pack national costume or items that represent your culture for District Conference</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task30', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>In Thailand Tasks (August 2025 - June 2026)</h3>
+            <table id="inThailandTasks">
+                <thead>
+                    <tr>
+                        <th>Task</th>
+                        <th>Deadline</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="task31">
+                        <td>Get 60-day visa stamp at immigration</td>
+                        <td>August 25, 2025</td>
+                        <td>Ensure visa stamp from Thai Immigration is for 60 days upon arrival</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task31', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task32">
+                        <td>Report to Immigration</td>
+                        <td>August 26, 2025</td>
+                        <td>Host family will help with this process within 24 hours of arrival</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task32', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task33">
+                        <td>Open bank account</td>
+                        <td>September 1, 2025</td>
+                        <td>Open an account at Siam Commercial Bank during first week</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task33', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task34">
+                        <td>Deposit emergency fund</td>
+                        <td>September 1, 2025</td>
+                        <td>Deposit $500 USD emergency fund in a separate account</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task34', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task35">
+                        <td>Submit September monthly report</td>
+                        <td>September 25, 2025</td>
+                        <td>Email monthly report to rotaryye3350@yahoo.co.th to receive monthly allowance</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task35', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task36">
+                        <td>Attend host Rotary Club meeting</td>
+                        <td>September 30, 2025</td>
+                        <td>Attend at least one Rotary Club of Siquare meeting in September</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task36', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task37">
+                        <td>Get Ministry of Education approval</td>
+                        <td>October 24, 2025</td>
+                        <td>Host family will assist with this process (within 60 days of arrival)</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task37', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task38">
+                        <td>Attend Thai language course</td>
+                        <td>November 15, 2025</td>
+                        <td>Attend the special Thai language course via Zoom meetings</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task38', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task39">
+                        <td>Prepare for second host family</td>
+                        <td>November 25, 2025</td>
+                        <td>Pack belongings and prepare to move to second host family</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task39', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="task40">
+                        <td>Decide on optional bus trips</td>
+                        <td>January 15, 2026</td>
+                        <td>Finalize decision about participating in South and/or North Thailand bus trips</td>
+                        <td>
+                            <select onchange="updateTaskStatus('task40', this.value)">
+                                <option value="Not Started">Not Started</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="Overview" class="tabcontent" style="display: none;">
+            <div class="overview-header">
+                <h2><i class="fas fa-plane-departure"></i> Thailand Rotary Youth Exchange Program</h2>
+                <p>You're an inbound student to Rotary District 3350, Thailand, sponsored by District 7780 (USA).
+                Your Host Club is the <strong>Rotary Club of Siquare</strong> and your Sponsor Club is <strong>Bath Sunrise Rotary</strong>.
+                The exchange spans from <strong>August 2025</strong> (arrive Aug 20-25) to <strong>June/July 2026</strong> (min. 10 months required).</p>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-box">
+                    <h4><i class="fas fa-school"></i> Host School</h4>
+                    <p><strong>Nakhonsawan School</strong><br>
+                    Amphoe muang, Nakhonsawan 60000<br>
+                    <i class="fas fa-phone"></i> +6656221151</p>
+                </div>
+                
+                <div class="info-box">
+                    <h4><i class="fas fa-coins"></i> Financial</h4>
+                    <p><strong>Monthly Allowance:</strong> 4,000 Thai Baht (~$120 USD)<br>
+                    <strong>Emergency Fund:</strong> $500 USD (refundable)<br>
+                    <strong>Bank:</strong> Siam Commercial Bank</p>
+                </div>
+                
+                <div class="info-box">
+                    <h4><i class="fas fa-passport"></i> Travel</h4>
+                    <p><strong>Arrival:</strong> Suvarnabhumi Airport (BKK)<br>
+                    <strong>Visa Type:</strong> Education "ED" visa<br>
+                    <strong>Initial Entry:</strong> 60-day stamp required</p>
+                </div>
+                
+                <div class="info-box">
+                    <h4><i class="fas fa-shield-alt"></i> Insurance</h4>
+                    <p><strong>Required:</strong> CISI Bolduc Plan B ($839)<br>
+                    <i>or</i> equivalent from home country<br>
+                    + Local Thai insurance (details TBA)</p>
+                </div>
+            </div>
+            
+            <div class="image-card">
+                <img src="https://www.hok.com/wp-content/uploads/2019/05/Suvarnabhumi-International-Airport-Midfield-Satellite-Concourse_Airside_1900-1600x1069.jpg" alt="Suvarnabhumi International Airport" style="height: 180px; object-fit: cover; object-position: center 40%;">
+                <div class="caption">
+                    <h4>Suvarnabhumi International Airport (BKK)</h4>
+                    <p>Remember to wear your Rotary blazer so your host family can easily spot you upon arrival!</p>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-home"></i> Host Families</h3>
+            <div class="host-family-grid">
+                <div class="host-family-card">
+                    <div class="header">
+                        <h4>First Host Family (Aug-Nov 2025)</h4>
+                    </div>
+                    <div class="content">
+                        <p><strong>Family:</strong> Mrs. Ladapa Attarungroj &amp; Mr. Witthawat Thongdong</p>
+                        <p><strong>Location:</strong> Chainat (district north of Nakhonsawan)</p>
+                        <p><strong>Address:</strong> 297 Moo 13, T.Suea Hok, Amphoe muang, Chainat 17000</p>
+                        <p><strong>Contact:</strong> <i class="fas fa-phone"></i> +66612635399 | <i class="fas fa-envelope"></i> Ladapa.att18@gmail.com</p>
+                    </div>
+                </div>
+                
+                <div class="host-family-card">
+                    <div class="header">
+                        <h4>Second Host Family (Dec 2025-Feb 2026)</h4>
+                    </div>
+                    <div class="content">
+                        <p><strong>Family:</strong> Mrs. Narakorn &amp; Mr. Khunnadet Songkhunnaporn</p>
+                        <p><strong>Location:</strong> Nakhonsawan (same city as your school)</p>
+                        <p><strong>Address:</strong> 9-11 Makhawan Rd., T.paknampho, Amphoe muang</p>
+                        <p><strong>Contact:</strong> <i class="fas fa-phone"></i> +66926289829 | <i class="fas fa-envelope"></i> wangfengyunhainan@gmail.com</p>
+                    </div>
+                </div>
+                
+                <div class="host-family-card">
+                    <div class="header">
+                        <h4>Third Host Family (Mar 2026-Departure)</h4>
+                    </div>
+                    <div class="content">
+                        <p><strong>Family:</strong> Mrs. Pranee &amp; Mr. Arron Watthanaworawit</p>
+                        <p><strong>Location:</strong> Nakhonsawan (same city as your school)</p>
+                        <p><strong>Address:</strong> 1/11 Ramsoon Rd., T.paknampho, Amphoe muang</p>
+                        <p><strong>Contact:</strong> <i class="fas fa-phone"></i> +66819532448 | <i class="fas fa-envelope"></i> plammy.nalove1@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3841.8518089979074!2d100.12276897599428!3d15.705731185246687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e04a9a69e168bd%3A0xd19be58e30e81c38!2sNakhonsawan%20School!5e0!3m2!1sen!2sus!4v1650766954826!5m2!1sen!2sus" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+            
+            <h3><i class="fas fa-calendar-alt"></i> Special Events &amp; Activities</h3>
+            <div class="photo-gallery">
+                <div class="image-card">
+                    <img src="https://assets.isu.pub/document-structure/230612060904-d654c43529644ef20afecd127293f976/v1/ca685522c9c5afa65e44483492662792.jpeg" alt="District Conference">
+                    <div class="caption">
+                        <h4>District Conference (Mar 2026)</h4>
+                        <p>Opportunity to showcase your talents and culture. Bring national costume or items from home!</p>
+                    </div>
+                </div>
+                
+                <div class="image-card">
+                    <img src="https://www.asiakingtravel.com/cuploads/files/southern-thailand-attractions-5-days-1.jpg" alt="Southern Thailand">
+                    <div class="caption">
+                        <h4>Southern Thailand Bus Trip ($700)</h4>
+                        <p>Optional tour in March 2026 exploring Southern Thailand's beaches and islands</p>
+                    </div>
+                </div>
+                
+                <div class="image-card">
+                    <img src="https://www.bookaway.com/blog/wp-content/uploads/2022/09/Northern-Thailand-.jpg" alt="Northern Thailand">
+                    <div class="caption">
+                        <h4>Northern Thailand Bus Trip ($800)</h4>
+                        <p>Optional tour in April 2026 exploring Northern Thailand's mountains and culture</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-money-bill-wave"></i> Monthly Allowance</h3>
+                <img src="https://cdn.corporatefinanceinstitute.com/assets/thai-baht.jpeg" alt="Thai Baht" style="width:100%; max-width:400px; border-radius:8px; margin-bottom:15px;">
+                <ul>
+                    <li>You'll receive <strong>4,000 Thai Baht</strong> (approx. $120 USD) monthly</li>
+                    <li>Allowance is deposited after receiving your monthly report</li>
+                    <li>The account will be opened at <strong>Siam Commercial Bank</strong> near your host family's home</li>
+                    <li>$500 USD emergency fund will be kept in a separate account (returned at the end of exchange)</li>
+                </ul>
+            </div>
+            
+            <div class="alert">
+                <i class="fas fa-lightbulb"></i> <strong>Important:</strong> Bring items to showcase your culture for the District Conference in March 2026. This could include your national costume, musical instruments, or other cultural items.
+            </div>
+        </div>
+        
+        <div id="Contacts" class="tabcontent" style="display: none;">
+            <div class="overview-header">
+                <h2><i class="fas fa-address-book"></i> Important Contacts</h2>
+                <p>Keep these contact details handy throughout your exchange experience. In case of emergency, contact your host family first, followed by your club counselor or district contacts.</p>
+            </div>
+            
+            <h3><i class="fas fa-globe-asia"></i> Thailand District 3350 Team</h3>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-user-tie"></i> District YE Chairman</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Dr. Pornchai Samuang</strong></p>
+                        <p><i class="fas fa-envelope"></i> psamuang@hotmail.com</p>
+                        <p><i class="fas fa-phone"></i> +66994415914</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-user-cog"></i> Program Officer</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Ms. Prapa Wongdeeprasith</strong></p>
+                        <p><i class="fas fa-envelope"></i> rotaryye3350@yahoo.co.th</p>
+                        <p><i class="fas fa-phone"></i> +662 661 6720-1</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-user-plus"></i> Inbound Coordinator</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Dr. Salakjit Nopakhun</strong></p>
+                        <p><i class="fas fa-envelope"></i> salakjit123@gmail.com</p>
+                        <p><i class="fas fa-phone"></i> +668 1915 9987</p>
+                        <p><i class="fas fa-exclamation-circle"></i> <strong>Emergency Contact</strong></p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-flag"></i> Country Coordinator</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Napaskamon (Penny) Promopakorn</strong></p>
+                        <p><i class="fas fa-envelope"></i> promopakorn@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-building"></i> Host Club &amp; School</h3>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-user-tie"></i> Club President</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Mrs. Kritpapha Seevilai</strong></p>
+                        <p><i class="fas fa-envelope"></i> kritpapha@hotmail.com</p>
+                        <p><i class="fas fa-phone"></i> +66813241219</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-hands-helping"></i> Club Counselor</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>PP Jessada Yospradab</strong></p>
+                        <p><i class="fas fa-envelope"></i> mywave176@gmail.com</p>
+                        <p><i class="fas fa-phone"></i> +66819698877</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-school"></i> School Official</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Mrs. Sompit Sabaitae</strong></p>
+                        <p><i class="fas fa-envelope"></i> s.sabaitae@nssc.ac.th</p>
+                        <p><i class="fas fa-phone"></i> +66898018488</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-exchange-alt"></i> Club YEO</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Mrs. Pranee Watthanaworawit</strong></p>
+                        <p><i class="fas fa-envelope"></i> plammy.nalove1@gmail.com</p>
+                        <p><i class="fas fa-phone"></i> +66819532448</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3><i class="fas fa-flag-usa"></i> US Support Team</h3>
+            <div class="contacts-grid">
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-user-tie"></i> District 7780 Contact</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Katharine Perkins</strong></p>
+                        <p><i class="fas fa-envelope"></i> kathihp1@gmail.com</p>
+                    </div>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="header">
+                        <h4><i class="fas fa-exchange-alt"></i> Bath YEO (in process)</h4>
+                    </div>
+                    <div class="content">
+                        <p><i class="fas fa-user"></i> <strong>Phyllis Wolfe</strong></p>
+                        <p><i class="fas fa-envelope"></i> ptlwolfe@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert">
+                <i class="fas fa-mobile-alt"></i> <strong>Pro Tip:</strong> Save all these contacts in your phone before departure. Take a screenshot of this page as a backup, and keep a printed copy in your travel documents.
+            </div>
+        </div>
+        
+        <div id="Rules" class="tabcontent" style="display: none;">
+            <div class="overview-header">
+                <h2><i class="fas fa-gavel"></i> Rules &amp; Guidelines</h2>
+                <p>As a Rotary Youth Exchange student, you must adhere to specific rules designed to ensure your safety and the success of your exchange. <strong>Remember:</strong> No matter your age, you are considered a minor under this program.</p>
+            </div>
+            
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="header">
+                        <i class="fas fa-ban"></i>
+                        <h4>The 4 Ds Rule</h4>
+                    </div>
+                    <div class="content">
+                        <ul>
+                            <li><strong>No Drinking</strong> of alcoholic beverages (except under host family supervision in their home only)</li>
+                            <li><strong>No Dating</strong> or romantic attachments (sexual relations forbidden)</li>
+                            <li><strong>No Drugs</strong> (except those prescribed by a physician)</li>
+                            <li><strong>No Driving</strong> of any motorized vehicles (cars, motorcycles, boats, etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="header">
+                        <i class="fas fa-user-shield"></i>
+                        <h4>Personal Conduct</h4>
+                    </div>
+                    <div class="content">
+                        <ul>
+                            <li><strong>No body piercing or tattoos</strong> during exchange</li>
+                            <li><strong>No smoking</strong> (legal age in Thailand is 18)</li>
+                            <li><strong>No illegal downloads</strong> from the internet</li>
+                            <li><strong>No immodest clothing</strong> or behavior</li>
+                            <li><strong>Modest social media use</strong> (Facebook, WhatsApp, etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="header">
+                        <i class="fas fa-plane"></i>
+                        <h4>Travel Restrictions</h4>
+                    </div>
+                    <div class="content">
+                        <ul>
+                            <li>Submit travel permission request <strong>3 weeks prior</strong> to travel date</li>
+                            <li><strong>No traveling alone</strong> or with only other students</li>
+                            <li><strong>No overseas travel</strong> during exchange</li>
+                            <li>Always travel with <strong>proper adult chaperones</strong></li>
+                            <li>Travel during school sessions is discouraged</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="rule-card">
+                    <div class="header">
+                        <i class="fas fa-users"></i>
+                        <h4>Family &amp; Social</h4>
+                    </div>
+                    <div class="content">
+                        <ul>
+                            <li><strong>30-day communication blackout</strong> with home upon arrival</li>
+                            <li><strong>Parent visits:</strong> Only during last 3 months of exchange</li>
+                            <li>Always <strong>inform host family</strong> of whereabouts</li>
+                            <li>Be <strong>reachable at all times</strong> via mobile phone</li>
+                            <li>Attend host Rotary Club meetings <strong>at least once monthly</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Consequences</h3>
+                <p>District 3350 reserves the right to terminate an exchange at any time. Any cost related to early return shall be the responsibility of the student's natural parents.</p>
+                <p>If found guilty of violating Thai law, you will receive NO assistance from Rotary or your home country's government and will be returned home as soon as released by authorities.</p>
+            </div>
+            
+            <div class="alert">
+                <i class="fas fa-lightbulb"></i> <strong>Important:</strong> These rules are designed for your safety and the success of your exchange. Breaking them can result in early termination of your exchange program.
+            </div>
+        </div>
+        
+        <div id="ThaiLanguage" class="tabcontent" style="display: none;">
+            <div class="overview-header">
+                <h2><i class="fas fa-language"></i> Thai Language Resources</h2>
+                <p>Thai is a tonal language with five tones: monotone, low, falling, high, and rising. While it can be challenging, learning even basic phrases will greatly enhance your exchange experience. English is widely understood in Bangkok, but less so in other regions.</p>
+            </div>
+            
+            <div class="resource-card">
+                <div class="header">
+                    <img src="https://play-lh.googleusercontent.com/WxEXyqBk_Z2lDMbkwMDWQID6rFg-G1XBNt9UkZnvDeCM_OPO3iTL9XGKeD_pzR3KWc8" alt="Preply Logo" style="height: 40px; border-radius: 8px;">
+                    <h4>Declan's Thai Lessons via Preply</h4>
+                </div>
+                <div class="content">
+                    <p>Continue your ongoing Thai language lessons with professional tutors through Preply's online platform.</p>
+                </div>
+                <div class="footer">
+                    <a href="https://preply.com/en/home" target="_blank">Access Preply <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            
+            <div class="resource-card">
+                <div class="header">
+                    <img src="https://play-lh.googleusercontent.com/8UeD1IXT6DR0O6NYD7Xs80fZFLYoRJYSKTinzfbMYuIlCxqC8YBN8yg3-bJgS0QzIlk" alt="Knowt Logo" style="height: 40px; border-radius: 8px;">
+                    <h4>Declan's Thai Vocabulary Flashcards</h4>
+                </div>
+                <div class="content">
+                    <p>Review your custom-created flashcards with important Thai vocabulary to learn before departure.</p>
+                </div>
+                <div class="footer">
+                    <a href="https://knowt.com/folder/785e2534-c0da-465b-947f-7628d31e4a6d" target="_blank">Access Flashcards <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-comment"></i> Essential Thai Phrases</h3>
+                <div class="lang-phrase">
+                    <span class="thai">สวัสดีค่ะ / ครับ</span>
+                    <span class="pronunciation">Sawasdee ka / krab</span>
+                    <span class="english">Hello (ka for female / krab for male)</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ผมชื่อ ____ (male)</span>
+                    <span class="pronunciation">Pom cheu ____</span>
+                    <span class="english">My name is ____</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ฉันชื่อ ____ (female)</span>
+                    <span class="pronunciation">Chan cheu ____</span>
+                    <span class="english">My name is ____</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ยินดีที่ได้รู้จักค่ะ / ครับ</span>
+                    <span class="pronunciation">Yin dee tee dai roo jag ka / krab</span>
+                    <span class="english">Nice to meet you</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">คุณสบายดีไหม</span>
+                    <span class="pronunciation">Kun sabai dee mai</span>
+                    <span class="english">How are you?</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ฉันสบายดีค่ะ / ครับ</span>
+                    <span class="pronunciation">Chan sabai dee ka / krab</span>
+                    <span class="english">I am fine thank you</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ขอบคุณค่ะ / ครับ</span>
+                    <span class="pronunciation">Kob kun ka / krab</span>
+                    <span class="english">Thank you</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">คุณมาจากประเทศไหน</span>
+                    <span class="pronunciation">Kun ma jak prates nai?</span>
+                    <span class="english">Where do you come from?</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ฉันมาจากประเทศ ____</span>
+                    <span class="pronunciation">Chan ma jag prates ____</span>
+                    <span class="english">I come from ______</span>
+                </div>
+                <div class="lang-phrase">
+                    <span class="thai">ฉันเป็นนักเรียนแลกเปลี่ยนโรตารี</span>
+                    <span class="pronunciation">Chan pen nag rien lak plean rotary</span>
+                    <span class="english">I am a Rotary Youth Exchange Student</span>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3><i class="fas fa-sort-numeric-up"></i> Numbers in Thai</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                    <div class="lang-phrase">
+                        <span class="thai">1 - หนึ่ง</span>
+                        <span class="pronunciation">nueng</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">2 - สอง</span>
+                        <span class="pronunciation">song</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">3 - สาม</span>
+                        <span class="pronunciation">sarm</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">4 - สี่</span>
+                        <span class="pronunciation">see</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">5 - ห้า</span>
+                        <span class="pronunciation">ha</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">6 - หก</span>
+                        <span class="pronunciation">hok</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">7 - เจ็ด</span>
+                        <span class="pronunciation">jed</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">8 - แปด</span>
+                        <span class="pronunciation">paed</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">9 - เก้า</span>
+                        <span class="pronunciation">kao</span>
+                    </div>
+                    <div class="lang-phrase">
+                        <span class="thai">10 - สิบ</span>
+                        <span class="pronunciation">sib</span>
+                    </div>
+                </div>
+                <p>Numbers 11-19 use "sib-" + number (e.g., 11 = sib-ed, 12 = sib-song)</p>
+            </div>
+            
+            <div class="alert">
+                <i class="fas fa-lightbulb"></i> <strong>District Support:</strong> District 3350 will provide free Thai language classes via Zoom in November 2025. For students not in Bangkok, the local school will arrange weekend Thai lessons.
+                <div style="margin-top: 15px;">
+                    <img src="https://lh6.googleusercontent.com/TXvW2OxVBExWQ3TfjE-_z-iucmtNFNr1Cr5rJdmRcgB95ziJK91ED4rHUpP64_uJbHwqPLPjRPVZYvHoKrHBDROQqbEMk3u640yYju84WGm0ymaWY0tmXqFYjb4Ud4szqg=w1280" alt="Thai Zoom Lesson" style="width:100%; max-height:300px; object-fit:cover; object-position: center 20%; border-radius:8px;">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Load saved task statuses from local storage
+        document.addEventListener('DOMContentLoaded', function() {
+            for (let i = 1; i <= 18; i++) {
+                const taskId = 'task' + i;
+                const savedStatus = localStorage.getItem(taskId);
+                
+                if (savedStatus) {
+                    const select = document.querySelector(`#${taskId} select`);
+                    select.value = savedStatus;
+                    updateRowColor(taskId, savedStatus);
+                }
+            }
+        });
+        
+        // Function to update task status
+        function updateTaskStatus(taskId, status) {
+            // Save to local storage
+            localStorage.setItem(taskId, status);
+            
+            // Update row color
+            updateRowColor(taskId, status);
+        }
+        
+        // Function to update row color based on status
+        function updateRowColor(taskId, status) {
+            const row = document.getElementById(taskId);
+            
+            // Remove any existing status classes
+            row.classList.remove('completed', 'progress');
+            
+            // Add appropriate class based on status
+            if (status === 'Completed') {
+                row.classList.add('completed');
+            } else if (status === 'In Progress') {
+                row.classList.add('progress');
+            }
+        }
+        
+        // Function to handle tab switching
+        function openTab(evt, tabName) {
+            // Declare variables
+            var i, tabcontent, tablinks;
+            
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
