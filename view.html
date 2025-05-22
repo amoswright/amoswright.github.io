@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Assessment</title>
+</head>
+<body>
+  <h1>Assessment Details</h1>
+  <div id="details"></div>
+  <button onclick="deleteAssessment()">Delete</button>
+  <button onclick="window.location.href='data.html'">Back to List</button>
+  <button onclick="window.location.href='index.html'">New Assessment</button>
+  <script>
+    const index = parseInt(localStorage.getItem('selectedAssessmentIndex'));
+    const data = JSON.parse(localStorage.getItem('assessments')) || [];
+    const entry = data[index];
+    if (entry) {
+      const div = document.getElementById('details');
+      div.innerHTML = \`
+        <p>Gender: \${entry.gender}</p>
+        <p>Age: \${entry.age}</p>
+        <p>Score: \${entry.score}</p>
+        <p>Timestamp: \${entry.timestamp}</p>
+      \`;
+    }
+    function deleteAssessment() {
+      if (confirm('Delete this assessment?')) {
+        data.splice(index, 1);
+        localStorage.setItem('assessments', JSON.stringify(data));
+        window.location.href = 'data.html';
+      }
+    }
+  </script>
+</body>
+</html>
