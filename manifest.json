@@ -1,10 +1,11 @@
 {
   "name": "FAST-ED Stroke Assessment",
-  "short_name": "StrokeApp",
-  "start_url": "./",
+  "short_name": "StrokeAssessment",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196F3",
+  "description": "A mobile-optimized tool for EMTs to perform the FAST-ED stroke assessment.",
   "icons": [
     {
       "src": "icon-192.png",
@@ -18,4 +19,3 @@
     }
   ]
 }
-
