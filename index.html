@@ -92,8 +92,8 @@
         <h2>Facial Droop</h2>
         <p><em>Have the patient smile and show teeth.</em></p>
         <div class="btn-group">
-          <button type="button" onclick="setScore('face', 0, this)">Normal</button>
-          <button type="button" onclick="setScore('face', 1, this)">Abnormal</button>
+          <button type="button" onclick="setScore('face', 0, this)">Normal (0)</button>
+          <button type="button" onclick="setScore('face', 1, this)">Abnormal (1)</button>
         </div>
       </div>
 
@@ -101,8 +101,9 @@
         <h2>Arm Drift</h2>
         <p><em>Have the patient close their eyes and hold arms extended.</em></p>
         <div class="btn-group">
-          <button type="button" onclick="setScore('arm', 0, this)">Normal</button>
-          <button type="button" onclick="setScore('arm', 1, this)">Abnormal</button>
+          <button type="button" onclick="setScore('arm', 0, this)">Normal (0)</button>
+          <button type="button" onclick="setScore('arm', 1, this)">Drops slowly / partially (1)</button>
+          <button type="button" onclick="setScore('arm', 2, this)">Drops quickly / completely (2)</button>
         </div>
       </div>
 
@@ -110,27 +111,27 @@
         <h2>Speech</h2>
         <p><em>Ask the patient to repeat a phrase.</em></p>
         <div class="btn-group">
-          <button type="button" onclick="setScore('speech', 0, this)">Normal</button>
-          <button type="button" onclick="setScore('speech', 1, this)">Slurred/Confused</button>
-          <button type="button" onclick="setScore('speech', 2, this)">Mute/Uncomprehending</button>
+          <button type="button" onclick="setScore('speech', 0, this)">Normal (0)</button>
+          <button type="button" onclick="setScore('speech', 1, this)">Slurred/Confused (1)</button>
+          <button type="button" onclick="setScore('speech', 2, this)">Incomprehensible / mute / uncomprehending (2)</button>
         </div>
       </div>
 
       <div class="section">
         <h2>Eye Deviation</h2>
         <div class="btn-group">
-          <button type="button" onclick="setScore('eye', 0, this)">Absent</button>
-          <button type="button" onclick="setScore('eye', 1, this)">Follows to one side</button>
-          <button type="button" onclick="setScore('eye', 2, this)">Immobilized to one side</button>
+          <button type="button" onclick="setScore('eye', 0, this)">Absent (0)</button>
+          <button type="button" onclick="setScore('eye', 1, this)">Follows to one side (1)</button>
+          <button type="button" onclick="setScore('eye', 2, this)">Immobilized to one side (2)</button>
         </div>
       </div>
 
       <div class="section">
         <h2>Weak Arm Denial/Neglect</h2>
         <div class="btn-group">
-          <button type="button" onclick="setScore('denial', 0, this)">Feels touch, owns</button>
-          <button type="button" onclick="setScore('denial', 1, this)">Missing feeling, owns arm</button>
-          <button type="button" onclick="setScore('denial', 2, this)">Denial of weak arm</button>
+          <button type="button" onclick="setScore('denial', 0, this)">Feels touch, owns (0)</button>
+          <button type="button" onclick="setScore('denial', 1, this)">Missing feeling, owns arm (1)</button>
+          <button type="button" onclick="setScore('denial', 2, this)">Denial of weak arm (2)</button>
         </div>
       </div>
 
