@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#007bff"/>
+    <title>Anatomy Quiz PWA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <div class="container">
+        <h1>Human Anatomy Quiz</h1>
+
+        <div class="game-controls">
+            <label for="question-count">Number of Questions:</label>
+            <select id="question-count">
+                <option value="3">3</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+            </select>
+            <button id="start-game-btn">Start Game</button>
+            <button id="reset-game-btn" style="display:none;">Play Again</button>
+        </div>
+
+        <div class="game-area">
+            <div class="quiz-info">
+                <p>Score: <span id="score">0</span></p>
+                <p>Time: <span id="timer">00:00</span></p>
+                <p id="question-prompt">Click "Start Game" to begin.</p>
+                <p id="feedback-message"></p>
+            </div>
+
+            <canvas id="skeleton-canvas" width="450" height="500"></canvas>
+        </div>
+
+        <div class="high-scores-area">
+            <h2>High Scores</h2>
+            <ul id="high-scores-list">
+                <!-- High scores will be populated here -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/app/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
