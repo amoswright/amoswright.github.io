@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill in the Blank Med Quiz</title>
+    <meta name="theme-color" content="#007bff"/>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --dark-color: #343a40;
+            --light-color: #ffffff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --border-radius: 8px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: var(--dark-color);
+        }
+        #med-selection-container, #quiz-container, #results-container {
+            display: none; /* Hidden by default */
+        }
+        .med-list {
+            list-style-type: none;
+            padding: 0;
+            max-height: 40vh;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 10px;
+        }
+        .selection-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .selection-controls button {
+            margin-top: 0;
+            font-size: 0.9em;
+            padding: 12px;
+        }
+        .variant-link {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #fill-in-blank-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: var(--border-radius);
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        #submit-answer-btn {
+            background-color: var(--secondary-color);
+            color: var(--dark-color);
+            font-weight: normal;
+        }
+        #answer-feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            font-size: 1.1em;
+        }
+        .med-list li {
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+        }
+        .med-list li:last-child {
+            border-bottom: none;
+        }
+        .med-list input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--light-color);
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        #progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        #progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        .result-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+        }
+        .result-item p { margin: 5px 0; }
+        .result-item .correct-answer { color: var(--success-color); font-weight: bold; }
+        .result-item .wrong-answer { color: var(--danger-color); font-weight: bold; text-decoration: line-through; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="med-selection-container">
+            <h1>Fill in the Blank Quiz</h1>
+            <p>Choose which medications you want to be quizzed on.</p>
+            <div class="variant-link">
+                <p>Want to switch back? <a href="index.html">Try the Multiple Choice version!</a></p>
+            </div>
+            <div class="selection-controls">
+                <button id="select-all-btn">Select All</button>
+                <button id="deselect-all-btn">Deselect All</button>
+            </div>
+            <ul id="med-list" class="med-list"></ul>
+            <button id="start-quiz-btn" disabled>Start Quiz</button>
+        </div>
+
+        <div id="quiz-container">
+            <div id="progress-bar"><div id="progress-bar-inner"></div></div>
+            <div id="question-counter"></div>
+            <div class="quiz-question">
+                <p id="question-text" class="question-text"></p>
+                <div id="answer-options" class="answer-options"></div>
+            </div>
+            <button id="next-question-btn" style="display: none;">Next</button>
+        </div>
+
+        <div id="results-container">
+            <h2>Quiz Complete!</h2>
+            <p id="score-text">Your score: 0/0 (0%)</p>
+            <h3>Review Your Answers</h3>
+            <div id="review-section"></div>
+            <button id="restart-quiz-btn">Take Another Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('Service Worker registered.'))
+                    .catch(err => console.log('Service Worker registration failed: ', err));
+            });
+        }
+        
+        const quizData = [
+          {
+            "Drug": "Duodote (Mark I Kit) Pralidoxime Chloride (2-Pam) and atropine",
+            "Class": "Acetylcholinesterase reactivator, parasympatholytic",
+            "Mechanism of Action": "Reverses SLUDGEM symptoms and removes the organophosphate from the acetylcholinesterase enzyme.",
+            "Indications": "Treatment of suspected organophosphate poisonings.",
+            "Contraindications": "No contraindications in the emergency setting.",
+            "Dosage": "A sterile solution of atropine (2.1 mg/0.7 mL) and pralidoxime chloride (600 mg/2 ml) administered intramuscularly.",
+          },
+          {
+            "Drug": "Lidocaine 2% (preservative free)",
+            "Class": "Anesthetic, antidysrhythmic",
+            "Mechanism of Action": "Reduces the flow of sodium in and out of nerves to decrease nerve signals.",
+            "Indications": "To decrease pain associated with Intraosseous fluid administration in a conscious patient.",
+            "Contraindications": "Hypersensitivity.",
+            "Dosage": "Adult: 20-50mg; Pediatric: 0.5 mg/kg.",
+          },
+          {
+            "Drug": "Albuterol sulfate (Ventolin, Proventil)",
+            "Class": "Sympathomimetic bronchodilator",
+            "Mechanism of Action": "Primarily a B2 sympathetic agonist, causing bronchodilation.",
+            "Indications": "Difficulty breathing associated with asthma and exacerbation of COPD.",
+            "Contraindications": "Hypersensitivity, symptomatic tachycardia.",
+            "Dosage": "2.5 mg in 3 ml as part of a DuoNeb, may repeat.",
+          },
+          {
+            "Drug": "Ibuprofen (Advil, Motrin)",
+            "Class": "Non-steroidal anti-inflammatory drug (NSAID), antipyretic, analgesic",
+            "Mechanism of Action": "Inhibits the enzyme cyclooxygenase (COX), which reduces prostaglandins.",
+            "Indications": "Fever > 101.5 F",
+            "Contraindications": "Hypersensitivity; administration of this type of drug in the past 6 hours.",
+            "Dosage": "400 - 800 mg",
+          },
+          {
+            "Drug": "D50, D50W, (50% dextrose in water)",
+            "Class": "Carbohydrate",
+            "Mechanism of Action": "Increases glucose concentration in the blood.",
+            "Indications": "Hypoglycemia in adult patients with altered mental status.",
+            "Contraindications": "Hyperglycemia or intracranial hemorrhage.",
+            "Dosage": "25 g slow IV push.",
+          },
+          {
+            "Drug": "Naloxone (Narcan)",
+            "Class": "Competitive narcotic antagonist",
+            "Mechanism of Action": "Competitively binds with narcotic receptor sites, displacing narcotics and blocking their effects.",
+            "Indications": "To reverse respiratory depression associated with narcotic overdose.",
+            "Contraindications": "Known hypersensitivity.",
+            "Dosage": "IV: 0.4 mg - 2.0 mg; IN: 1-4 mg.",
+          },
+          {
+            "Drug": "Aspirin (Acetylsalicylic acid, ASA)",
+            "Class": "Salicylate, platelet aggregation inhibitor",
+            "Mechanism of Action": "Inhibits the production of cyclooxygenase, which in turn inhibits platelet aggregation.",
+            "Indications": "Acute coronary syndrome.",
+            "Contraindications": "Hypersensitivity; not given to children with suspected viral illnesses.",
+            "Dosage": "81-324 mg chewable.",
+          },
+          {
+            "Drug": "Ipratropium bromide (Atrovent)",
+            "Class": "Parasympatholytic bronchodilator, anticholinergic",
+            "Mechanism of Action": "Inhibits interaction of acetylcholine at receptor sites on bronchial smooth muscle, causing bronchodilation.",
+            "Indications": "Used with other drugs for difficulty breathing associated with asthma and COPD.",
+            "Contraindications": "Hypersensitivity, symptomatic tachycardia.",
+            "Dosage": "500 mcg combined with a beta agonist in 3 ml.",
+          },
+          {
+            "Drug": "Epinephrine 1:1,000 (Adrenalin)",
+            "Class": "Sympathomimetic",
+            "Mechanism of Action": "Acts directly on alpha- and beta-adrenergic receptors, causing vasoconstriction and bronchodilation.",
+            "Indications": "Anaphylaxis.",
+            "Contraindications": "No contraindications during an anaphylactic reaction.",
+            "Dosage": "Adult: 0.3 mg; Pedi: 0.15 mg IM.",
+          },
+          {
+            "Drug": "Acetaminophen (Tylenol, APAP)",
+            "Class": "Analgesic, antipyretic",
+            "Mechanism of Action": "Produces analgesia by elevation of the pain threshold.",
+            "Indications": "Fever > 101.5 F.",
+            "Contraindications": "Hypersensitivity; administration in the past 4 hours.",
+            "Dosage": "350 - 1,000 mg adult, 15 mg/kg pediatric.",
+          },
+          {
+            "Drug": "Nitrous oxide (Nitronox)",
+            "Class": "Analgesic, anesthetic",
+            "Mechanism of Action": "CNS depressant with analgesic properties.",
+            "Indications": "Severe musculoskeletal pain or chest pain not relieved by nitro.",
+            "Contraindications": "Decreased level of consciousness, TBI, COPD, suspected pneumothorax.",
+            "Dosage": "Self-administered mixture of 50% nitrous oxide and 50% O2.",
+          },
+          {
+            "Drug": "Normal Saline (0.9% sodium chloride solution)",
+            "Class": "Crystalloid",
+            "Mechanism of Action": "Temporarily expands vascular volume by replacing water and electrolytes.",
+            "Indications": "Hypovolemia, heat exhaustion, heat stroke, and DKA.",
+            "Contraindications": "Heart failure (CHF), extreme hypertension.",
+            "Dosage": "Administered as a volume replacement, 10-20 ml/kg in 250 ml boluses.",
+          },
+          {
+            "Drug": "Nitroglycerin or glyceryl trinitrate (Nitrostat, Nitrobid, NTG)",
+            "Class": "Nitrate, vasodilator",
+            "Mechanism of Action": "Broken down to produce nitric oxide, a powerful vasodilator.",
+            "Indications": "Congestive heart failure, or chest pain associated with acute coronary syndrome.",
+            "Contraindications": "Hypotension, increased ICP, and use of PDE-5 inhibitors.",
+            "Dosage": "0.4 mg sublingually every 5 minutes.",
+          },
+          {
+            "Drug": "Ondansetron (Zofran)",
+            "Class": "Antiemetic",
+            "Mechanism of Action": "A selective 5-HT3 receptor antagonist.",
+            "Indications": "Treatment of nausea/vomiting.",
+            "Contraindications": "Hypersensitivity.",
+            "Dosage": "4 mg, one time only.",
+          },
+          {
+            "Drug": "Cyanokit (Hydroxocobalamin)",
+            "Class": "Vitamin; Antidote",
+            "Mechanism of Action": "Binds with cyanide to form vitamin B12, which is then excreted.",
+            "Indications": "Treatment of known or suspected cyanide poisoning.",
+            "Contraindications": "Hypersensitivity to any component (including cobalt).",
+            "Dosage": "1 kit (5g) infusion over 15 minutes.",
+          },
+          {
+            "Drug": "Glucagon",
+            "Class": "Hormone",
+            "Mechanism of Action": "Causes a release of stored glycogen and its conversion to glucose.",
+            "Indications": "Significant hypoglycemia with altered mental status and no IV access.",
+            "Contraindications": "Hypersensitivity.",
+            "Dosage": "1 mg IM injection.",
+          },
+          {
+            "Drug": "Epinephrine 1:10,000 (Adrenalin)",
+            "Class": "Sympathomimetic",
+            "Mechanism of Action": "Shunts blood flow to the vital organs via alpha effects during cardiac arrest.",
+            "Indications": "V-fib, pulseless VT, asystole, PEA.",
+            "Contraindications": "No contraindications during cardiac arrest.",
+            "Dosage": "1mg IV/IO every 3-5 minutes during cardiac arrest.",
+          },
+          {
+            "Drug": "Oxygen",
+            "Class": "Oxidizer",
+            "Mechanism of Action": "A gas necessary for the breakdown of glucose into a usable energy form.",
+            "Indications": "Hypoxia or suspected hypoxia, SPO2 < 95%.",
+            "Contraindications": "None in the short term.",
+            "Dosage": "Titrated to maintain an SPO2 of 95%.",
+          },
+          {
+            "Drug": "Oxytocin (Pitocin)",
+            "Class": "Hormone",
+            "Mechanism of Action": "Stimulates uterine contractions by causing a rise in intracellular calcium.",
+            "Indications": "Routine administration AFTER placental delivery.",
+            "Contraindications": "Allergy.",
+            "Dosage": "IM injection, effects are almost immediate.",
+          }
+        ];
+
+        const medSelectionContainer = document.getElementById('med-selection-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const medList = document.getElementById('med-list');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const deselectAllBtn = document.getElementById('deselect-all-btn');
+        const questionText = document.getElementById('question-text');
+        const answerOptions = document.getElementById('answer-options');
+        const scoreText = document.getElementById('score-text');
+        const reviewSection = document.getElementById('review-section');
+        const restartQuizBtn = document.getElementById('restart-quiz-btn');
+        const progressBarInner = document.getElementById('progress-bar-inner');
+        const questionCounter = document.getElementById('question-counter');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+
+        let allQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        const questionCategories = ['Class', 'Mechanism of Action', 'Indications', 'Contraindications', 'Dosage'];
+
+        function init() {
+            showMedSelection();
+            startQuizBtn.addEventListener('click', startQuiz);
+            selectAllBtn.addEventListener('click', () => toggleAllMeds(true));
+            deselectAllBtn.addEventListener('click', () => toggleAllMeds(false));
+            restartQuizBtn.addEventListener('click', showMedSelection);
+            nextQuestionBtn.addEventListener('click', () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < allQuestions.length) {
+                    displayQuestion();
+                } else {
+                    showResults();
+                }
+            });
+
+            // Centralized 'Enter' key handling for the quiz
+            document.addEventListener('keyup', (event) => {
+                if (event.key !== 'Enter') return;
+
+                // Ignore if not in the quiz view
+                if (quizContainer.style.display === 'none') return;
+
+                // If "Next" button is visible, it means we're in the feedback stage.
+                const nextBtn = document.getElementById('next-question-btn');
+                if (nextBtn && nextBtn.style.display !== 'none') {
+                    event.preventDefault();
+                    nextBtn.click();
+                    return;
+                }
+
+                // If "Submit" button is available, it means we're answering a question.
+                const submitBtn = document.getElementById('submit-answer-btn');
+                if (submitBtn && !submitBtn.disabled) {
+                    event.preventDefault();
+                    submitBtn.click();
+                }
+            });
+        }
+
+        function toggleAllMeds(select) {
+            const checkboxes = medList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = select;
+            });
+            startQuizBtn.disabled = !select;
+        }
+
+        function showMedSelection() {
+            medSelectionContainer.style.display = 'block';
+            quizContainer.style.display = 'none';
+            resultsContainer.style.display = 'none';
+
+            medList.innerHTML = '';
+            quizData.forEach(med => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <input type="checkbox" id="${med.Drug}" name="${med.Drug}" value="${med.Drug}">
+                    <label for="${med.Drug}">${med.Drug}</label>
+                `;
+                medList.appendChild(li);
+            });
+
+            medList.addEventListener('change', () => {
+                const selectedMeds = document.querySelectorAll('#med-list input[type="checkbox"]:checked');
+                startQuizBtn.disabled = selectedMeds.length === 0;
+            });
+        }
+
+        function startQuiz() {
+            const selectedMedsNodes = document.querySelectorAll('#med-list input[type="checkbox"]:checked');
+            const selectedMedNames = Array.from(selectedMedsNodes).map(node => node.value);
+            const selectedMedData = quizData.filter(med => selectedMedNames.includes(med.Drug));
+
+            if (selectedMedData.length === 0) return;
+
+            generateQuestions(selectedMedData);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = [];
+
+            medSelectionContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            
+            displayQuestion();
+        }
+
+        function generateQuestions(selectedMeds) {
+            allQuestions = [];
+            selectedMeds.forEach(med => {
+                questionCategories.forEach(category => {
+                    const correctAnswer = med[category];
+                    if (!correctAnswer) return;
+
+                    allQuestions.push({
+                        drug: med.Drug,
+                        category: category,
+                        question: `What is the **${category}** for ${med.Drug}?`,
+                        correctAnswer: correctAnswer
+                    });
+                });
+            });
+            allQuestions = shuffleArray(allQuestions);
+        }
+
+        function displayQuestion() {
+            nextQuestionBtn.style.display = 'none';
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            
+            progressBarInner.style.width = `${((currentQuestionIndex) / allQuestions.length) * 100}%`;
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${allQuestions.length}`;
+            questionText.innerHTML = currentQuestion.question;
+            
+            answerOptions.innerHTML = `
+                <input type="text" id="fill-in-blank-input" placeholder="Type your answer here..." autocomplete="off" autocapitalize="none" spellcheck="false">
+                <button id="submit-answer-btn">Submit Answer</button>
+                <div id="answer-feedback" style="display: none;"></div>
+            `;
+            
+            document.getElementById('submit-answer-btn').onclick = submitFillInBlankAnswer;
+            const inputField = document.getElementById('fill-in-blank-input');
+            inputField.focus();
+        }
+
+        /**
+         * Normalizes a string for flexible comparison by:
+         * - Converting to lowercase
+         * - Removing commas and semicolons
+         * - Replacing multiple spaces with a single space
+         * - Trimming leading/trailing whitespace
+         */
+        function normalizeString(str) {
+            if (typeof str !== 'string') return '';
+            let normalized = str.toLowerCase().replace(/[,;]/g, "").replace(/\s+/g, " ").trim();
+            return normalized;
+        }
+
+        function submitFillInBlankAnswer() {
+            const currentQuestion = allQuestions[currentQuestionIndex];
+            const userInput = document.getElementById('fill-in-blank-input');
+            const userAnswer = userInput.value.trim();
+            const submitBtn = document.getElementById('submit-answer-btn');
+            const answerFeedback = document.getElementById('answer-feedback');
+
+            // Normalize both the user's answer and the correct answer for flexible comparison
+            const normalizedUserAnswer = normalizeString(userAnswer);
+            const normalizedCorrectAnswer = normalizeString(currentQuestion.correctAnswer);
+            const isCorrect = normalizedUserAnswer === normalizedCorrectAnswer;
+
+            if (isCorrect) {
+                score++;
+                answerFeedback.innerHTML = `<p><strong>Correct!</strong> The answer is <span class="correct-answer">${currentQuestion.correctAnswer}</span>.</p>`;
+                answerFeedback.style.cssText = "display: block; background-color: #eaf7ec; border: 1px solid var(--success-color); color: var(--dark-color);";
+            } else {
+                answerFeedback.innerHTML = `
+                    <p><strong>Incorrect.</strong></p>
+                    <p>You answered: <span class="wrong-answer">${userAnswer || '<em>(blank)</em>'}</span></p>
+                    <p>Correct answer: <span class="correct-answer">${currentQuestion.correctAnswer}</span></p>
+                `;
+                answerFeedback.style.cssText = "display: block; background-color: #fbe9e9; border: 1px solid var(--danger-color); color: var(--dark-color);";
+            }
+
+            userAnswers.push({
+                question: currentQuestion.question,
+                selected: userAnswer,
+                correct: currentQuestion.correctAnswer,
+                isCorrect: isCorrect
+            });
+
+            userInput.disabled = true;
+            submitBtn.disabled = true;
+
+            nextQuestionBtn.style.display = 'block';
+            progressBarInner.style.width = `${((currentQuestionIndex + 1) / allQuestions.length) * 100}%`;
+
+            if (currentQuestionIndex >= allQuestions.length - 1) {
+                nextQuestionBtn.textContent = 'Finish Quiz';
+            } else {
+                nextQuestionBtn.textContent = 'Next Question';
+            }
+        }
+
+        function showResults() {
+            quizContainer.style.display = 'none';
+            resultsContainer.style.display = 'block';
+
+            const percentage = allQuestions.length > 0 ? Math.round((score / allQuestions.length) * 100) : 0;
+            scoreText.textContent = `Your score: ${score}/${allQuestions.length} (${percentage}%)`;
+            
+            reviewSection.innerHTML = '';
+            userAnswers.forEach(answer => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                let selectedAnswerHTML = '';
+                if (answer.isCorrect) {
+                    selectedAnswerHTML = `<p>Your answer: <span class="correct-answer">${answer.selected}</span></p>`;
+                } else {
+                    selectedAnswerHTML = `
+                        <p>Your answer: <span class="wrong-answer">${answer.selected || '<em>(blank)</em>'}</span></p>
+                        <p>Correct answer: <span class="correct-answer">${answer.correct}</span></p>
+                    `;
+                }
+                
+                resultItem.innerHTML = `
+                    <p><strong>${answer.question}</strong></p>
+                    ${selectedAnswerHTML}
+                `;
+                reviewSection.appendChild(resultItem);
+            });
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        init();
+
+    </script>
+</body>
+</html>
