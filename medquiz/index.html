@@ -51,6 +51,16 @@
             border-radius: var(--border-radius);
             padding: 10px;
         }
+        .selection-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .selection-controls button {
+            margin-top: 0;
+            font-size: 0.9em;
+            padding: 12px;
+        }
         .med-list li {
             padding: 12px;
             display: flex;
@@ -142,6 +152,10 @@
         <div id="med-selection-container">
             <h1>Select Medications</h1>
             <p>Choose which medications you want to be quizzed on.</p>
+            <div class="selection-controls">
+                <button id="select-all-btn">Select All</button>
+                <button id="deselect-all-btn">Deselect All</button>
+            </div>
             <ul id="med-list" class="med-list"></ul>
             <button id="start-quiz-btn" disabled>Start Quiz</button>
         </div>
@@ -335,6 +349,8 @@
         const resultsContainer = document.getElementById('results-container');
         const medList = document.getElementById('med-list');
         const startQuizBtn = document.getElementById('start-quiz-btn');
+        const selectAllBtn = document.getElementById('select-all-btn');
+        const deselectAllBtn = document.getElementById('deselect-all-btn');
         const questionText = document.getElementById('question-text');
         const answerOptions = document.getElementById('answer-options');
         const scoreText = document.getElementById('score-text');
@@ -353,6 +369,8 @@
         function init() {
             showMedSelection();
             startQuizBtn.addEventListener('click', startQuiz);
+            selectAllBtn.addEventListener('click', () => toggleAllMeds(true));
+            deselectAllBtn.addEventListener('click', () => toggleAllMeds(false));
             restartQuizBtn.addEventListener('click', showMedSelection);
             nextQuestionBtn.addEventListener('click', () => {
                 currentQuestionIndex++;
@@ -362,6 +380,14 @@
                     showResults();
                 }
             });
+        }
+
+        function toggleAllMeds(select) {
+            const checkboxes = medList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = select;
+            });
+            startQuizBtn.disabled = !select;
         }
 
         function showMedSelection() {
