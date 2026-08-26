@@ -1,270 +1,277 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAST-ED Stroke Assessment</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2196F3">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f4f4f4;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Amos Wright — Projects</title>
+<meta name="description" content="A list of apps and tools Amos Wright has built, for EMS training and personal projects." />
+<style>
+  :root {
+    --bg: #f4f4f5;
+    --card-bg: #ffffff;
+    --text: #18181b;
+    --text-muted: #6b7280;
+    --border: #e4e4e7;
+    --accent: #2563eb;
+    --tag-ems: #dc2626;
+    --tag-personal: #16a34a;
+    --tag-experimental: #9333ea;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  h1 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  h2.section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 2.5rem 0 1rem;
+  }
+
+  .card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .tag-ems { background: rgba(220, 38, 38, 0.1); color: var(--tag-ems); }
+  .tag-personal { background: rgba(22, 163, 74, 0.1); color: var(--tag-personal); }
+  .tag-experimental { background: rgba(147, 51, 234, 0.1); color: var(--tag-experimental); }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .card-url {
+    font-size: 0.78rem;
+    color: var(--accent);
+    margin-top: 0.4rem;
+    word-break: break-all;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f0f12;
+      --card-bg: #1a1a1f;
+      --text: #f4f4f5;
+      --text-muted: #9ca3af;
+      --border: #2a2a31;
     }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1, h2 {
-      text-align: center;
-    }
-    .section {
-      margin-bottom: 20px;
-    }
-    .btn-group button {
-      margin: 5px;
-      padding: 10px;
-      font-size: 1em;
-    }
-    .btn-selected {
-      background-color: #4CAF50;
-      color: white;
-    }
-    #result {
-      font-weight: bold;
-      font-size: 1.2em;
-      text-align: center;
-      padding-top: 10px;
-    }
-    input[type="text"], input[type="datetime-local"], input[type="number"], select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    textarea {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .checkbox-list label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    #resetBtn, #submitBtn {
-      display: block;
-      margin: 30px auto 0;
-      padding: 10px 20px;
-      font-size: 1em;
-      background-color: #2196F3;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #resetBtn {
-      background-color: #f44336;
-    }
-    #timeElapsed {
-      font-style: italic;
-      font-size: 0.9em;
-      margin-top: -10px;
-      margin-bottom: 10px;
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>FAST-ED Stroke Assessment</h1>
-    <form id="assessmentForm">
-      <div class="section">
-        <h2>Patient Gender</h2>
-        <select id="patientGender">
-          <option value="">Select gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+  <div class="wrap">
+    <header>
+      <h1>Amos Wright</h1>
+      <p>Apps and tools I've built — mostly EMS training, plus a few personal projects.</p>
+    </header>
 
-      <div class="section">
-        <h2>Patient Age</h2>
-        <input type="number" id="patientAge" placeholder="Enter age">
-      </div>
-
-      <div class="section">
-        <h2>Facial Palsy (0-1)</h2>
-        <div class="btn-group">
-          <button type="button" onclick="setScore('face', 0, this)">Normal (0)</button>
-          <button type="button" onclick="setScore('face', 1, this)">Minor Droop (1)</button>
-          <button type="button" onclick="setScore('face', 2, this)">Severe Asymmetry (2)</button>
+    <h2 class="section-title">EMS &amp; Training</h2>
+    <div class="card-list">
+      <a class="card" href="https://spstreets-3d.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">SP Streets 3D</span>
+          <span class="tag tag-ems">EMS</span>
         </div>
-      </div>
-
-      <div class="section">
-        <h2>Arm Weakness (0-2)</h2>
-        <div class="btn-group">
-          <button type="button" onclick="setScore('arm', 0, this)">Normal (0)</button>
-          <button type="button" onclick="setScore('arm', 1, this)">Drops slowly / partially (1)</button>
-          <button type="button" onclick="setScore('arm', 2, this)">Drops quickly / completely (2)</button>
+        <div class="card-desc">
+          Drive real South Portland, ME streets in 3D to learn them for EMS response — turn-by-turn
+          navigation, zone-based practice that adapts to what you already know, and account-based
+          progress tracking.
         </div>
-      </div>
+        <div class="card-url">spstreets-3d.web.app</div>
+      </a>
 
-      <div class="section">
-        <h2>Speech Changes (0-2)</h2>
-        <div class="btn-group">
-          <button type="button" onclick="setScore('speech', 0, this)">Normal (0)</button>
-          <button type="button" onclick="setScore('speech', 1, this)">Slurred, confusion (1)</button>
-          <button type="button" onclick="setScore('speech', 2, this)">Incomprehensible / mute / uncomprehending (2)</button>
+      <a class="card" href="https://spstreets-83898.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">SP Streets</span>
+          <span class="tag tag-ems">EMS</span>
         </div>
-      </div>
-
-      <div class="section">
-        <h2>Eye Deviation (0-2)</h2>
-        <div class="btn-group">
-          <button type="button" onclick="setScore('eye', 0, this)">Absent (0)</button>
-          <button type="button" onclick="setScore('eye', 1, this)">Follows to one side (1)</button>
-          <button type="button" onclick="setScore('eye', 2, this)">Immobilized to one side (2)</button>
+        <div class="card-desc">
+          The original 2D version — a map-based street-name quiz for South Portland with
+          neighborhood practice modes and a leaderboard.
         </div>
-      </div>
+        <div class="card-url">spstreets-83898.web.app</div>
+      </a>
 
-      <div class="section">
-        <h2>Weak Arm Denial/Neglect (0-2)</h2>
-        <div class="btn-group">
-          <button type="button" onclick="setScore('denial', 0, this)">Feels touch, owns (0)</button>
-          <button type="button" onclick="setScore('denial', 1, this)">Missing feeling, but owns weak arm (1)</button>
-          <button type="button" onclick="setScore('denial', 2, this)">Missing feeling, denial of weak arm (2)</button>
+      <a class="card" href="https://spstreets-3d-max.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">SP Streets 3D Max</span>
+          <span class="tag tag-experimental">Experimental</span>
         </div>
-      </div>
+        <div class="card-desc">
+          An in-progress variant of SP Streets 3D exploring a different 3D rendering approach.
+          Not yet feature-complete.
+        </div>
+        <div class="card-url">spstreets-3d-max.web.app</div>
+      </a>
 
-      <div class="section">
-        <h2>Time Last Known Well</h2>
-        <input type="datetime-local" id="timeWell" onchange="updateTimeElapsed()">
-        <div id="timeElapsed"></div>
-      </div>
+      <a class="card" href="https://quick-gcs.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">GCS Trainer</span>
+          <span class="tag tag-ems">EMS</span>
+        </div>
+        <div class="card-desc">
+          An offline-capable app for practicing Glasgow Coma Scale (E/V/M) scoring against
+          realistic patient cases, with scoring and explanations.
+        </div>
+        <div class="card-url">quick-gcs.web.app</div>
+      </a>
 
-      <div class="section">
-        <h2>Contact Phone Number</h2>
-        <input type="text" id="contactPhone" placeholder="Enter contact number">
-      </div>
+      <a class="card" href="https://me-ems-v2.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">Maine EMS Protocols</span>
+          <span class="tag tag-ems">EMS</span>
+        </div>
+        <div class="card-desc">
+          An installable reference app for Maine's 2025 EMS clinical protocols.
+        </div>
+        <div class="card-url">me-ems-v2.web.app</div>
+      </a>
 
-      <div class="section">
-        <h2>Patient Blood Glucose</h2>
-        <input type="number" id="bloodGlucose" placeholder="Enter blood glucose level">
-      </div>
+      <a class="card" href="fast-ed/" >
+        <div class="card-top">
+          <span class="card-title">FAST-ED Stroke Assessment</span>
+          <span class="tag tag-ems">EMS</span>
+        </div>
+        <div class="card-desc">
+          A quick FAST-ED stroke severity scoring tool that saves assessment history for review.
+        </div>
+        <div class="card-url">amoswright.github.io/fast-ed/</div>
+      </a>
 
-      <div class="section">
-<h2>Blood Thinners or Anticoagulants</h2>
-<div class="checkbox-list">
-  <label><input type="checkbox" value="Warfarin (Coumadin)"> Warfarin (Coumadin)</label>
-  <label><input type="checkbox" value="Heparin (subcutaneous or intravenous)"> Heparin (subcutaneous or intravenous)</label>
-  <label><input type="checkbox" value="Enoxaparin (Lovenox)"> Enoxaparin (Lovenox)</label>
-  <label><input type="checkbox" value="Fondaparinux (Arixtra)"> Fondaparinux (Arixtra)</label>
-  <label><input type="checkbox" value="Apixaban (Eliquis)"> Apixaban (Eliquis)</label>
-  <label><input type="checkbox" value="Rivaroxaban (Xarelto)"> Rivaroxaban (Xarelto)</label>
-  <label><input type="checkbox" value="Edoxaban (Savaysa)"> Edoxaban (Savaysa)</label>
-</div>
+      <a class="card" href="medquiz/" >
+        <div class="card-top">
+          <span class="card-title">Paramedic Med Quiz</span>
+          <span class="tag tag-ems">EMS</span>
+        </div>
+        <div class="card-desc">
+          Quiz tool for memorizing paramedic-level medications, including a fill-in-the-blank mode.
+        </div>
+        <div class="card-url">amoswright.github.io/medquiz/</div>
+      </a>
 
-      </div>
+      <a class="card" href="anatomy/" >
+        <div class="card-top">
+          <span class="card-title">Anatomy Quiz</span>
+          <span class="tag tag-ems">EMS</span>
+        </div>
+        <div class="card-desc">
+          An installable quiz app for practicing anatomy terminology.
+        </div>
+        <div class="card-url">amoswright.github.io/anatomy/</div>
+      </a>
+    </div>
 
-      <div class="section">
-        <h2>Recent Surgeries</h2>
-        <textarea id="recentSurgeries" placeholder="Describe any recent surgeries..."></textarea>
-      </div>
+    <h2 class="section-title">Personal Projects</h2>
+    <div class="card-list">
+      <a class="card" href="https://burnt-coat-division.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">Burnt Coat Island Division Explorer</span>
+          <span class="tag tag-personal">Personal</span>
+        </div>
+        <div class="card-desc">
+          Explores different ways to split Burnt Coat Island into equal northern, middle, and
+          southern thirds, using official Maine state GIS parcel data.
+        </div>
+        <div class="card-url">burnt-coat-division.web.app</div>
+      </a>
 
-      <div id="result">Total Score: 0</div>
+      <a class="card" href="https://island-opinions.web.app" target="_blank" rel="noopener">
+        <div class="card-top">
+          <span class="card-title">The Island House · Family Survey</span>
+          <span class="tag tag-personal">Personal</span>
+        </div>
+        <div class="card-desc">
+          A private survey tool for gathering family input on decisions about a shared family
+          property.
+        </div>
+        <div class="card-url">island-opinions.web.app</div>
+      </a>
+    </div>
 
-      <button type="submit" id="submitBtn">Submit</button>
-      <button type="button" id="resetBtn" onclick="resetForm()">Reset</button>
-    </form>
+    <footer>Built with Claude Code.</footer>
   </div>
-
-  <script>
-    const scores = {
-      face: 0,
-      arm: 0,
-      speech: 0,
-      eye: 0,
-      denial: 0
-    };
-
-    function setScore(section, value, button) {
-      scores[section] = value;
-      updateResult();
-      const buttons = button.parentElement.querySelectorAll('button');
-      buttons.forEach(btn => btn.classList.remove('btn-selected'));
-      button.classList.add('btn-selected');
-    }
-
-    function updateResult() {
-      const total = Object.values(scores).reduce((a, b) => a + b, 0);
-      document.getElementById('result').textContent = `Total Score: ${total}`;
-    }
-
-    function updateTimeElapsed() {
-      const timeWellInput = document.getElementById('timeWell').value;
-      const display = document.getElementById('timeElapsed');
-
-      if (timeWellInput) {
-        const timeWell = new Date(timeWellInput);
-        const now = new Date();
-        const diffMs = now - timeWell;
-
-        if (diffMs > 0) {
-          const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-          const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-          display.textContent = `Elapsed Time: ${diffHours} hour(s) and ${diffMinutes} minute(s)`;
-        } else {
-          display.textContent = 'Entered time is in the future.';
-        }
-      } else {
-        display.textContent = '';
-      }
-    }
-
-    function resetForm() {
-      if (confirm('Are you sure you want to reset the form?')) {
-        document.getElementById('assessmentForm').reset();
-        document.getElementById('timeElapsed').textContent = '';
-        document.querySelectorAll('.btn-group button').forEach(btn => btn.classList.remove('btn-selected'));
-        for (let key in scores) scores[key] = 0;
-        updateResult();
-      }
-    }
-
-    document.getElementById('assessmentForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const data = {
-        gender: document.getElementById('patientGender').value,
-        age: document.getElementById('patientAge').value,
-        score: Object.values(scores).reduce((a, b) => a + b, 0),
-        timestamp: new Date().toISOString()
-      };
-
-      const previousData = JSON.parse(localStorage.getItem('assessments')) || [];
-      previousData.push(data);
-      localStorage.setItem('assessments', JSON.stringify(previousData));
-
-      window.location.href = 'data.html';
-    });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(registration => console.log('ServiceWorker registered:', registration))
-          .catch(error => console.log('ServiceWorker registration failed:', error));
-      });
-    }
-  </script>
 </body>
 </html>
-

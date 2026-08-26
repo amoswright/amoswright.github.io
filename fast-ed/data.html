@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saved Assessments</title>
+</head>
+<body>
+  <h1>Saved FAST-ED Assessments</h1>
+  <ul id="assessmentList"></ul>
+  <script>
+    const data = JSON.parse(localStorage.getItem('assessments')) || [];
+    const list = document.getElementById('assessmentList');
+    data.forEach((entry, index) => {
+      const item = document.createElement('li');
+      item.innerHTML = \`Patient Age: \${entry.age}, Gender: \${entry.gender}, Score: \${entry.score}
+      <button onclick="viewAssessment(\${index})">View</button>
+      <button onclick="deleteAssessment(\${index})">Delete</button>\`;
+      list.appendChild(item);
+    });
+    function viewAssessment(index) {
+      localStorage.setItem('selectedAssessmentIndex', index);
+      window.location.href = 'view.html';
+    }
+    function deleteAssessment(index) {
+      if (confirm('Delete this assessment?')) {
+        data.splice(index, 1);
+        localStorage.setItem('assessments', JSON.stringify(data));
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
